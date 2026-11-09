@@ -1,0 +1,36 @@
+# Fact-level retrieval evaluation (copied from implicit_version_03; paths set by run.sh).
+defaults:
+  - data: implexconv
+  - _self_
+
+run:
+  max_rows: null
+  sample_ratio: null
+
+evaluate:
+  output_dir: ./outputs
+  output_file: fact_retrieval_eval.json
+  top_ks: [1, 5, 10, 14, 20, 30, 50, 68, 92, 100, 151]
+  show_progress: true
+  train_data_manifest_path: null
+  fact_bag_path: null
+  prebatch_facts: false            # set true for the SYMMETRIC model (facts re-encoded through the adapter)
+  embedding:
+    model: Qwen/Qwen3-Embedding-8B
+    base_model: Qwen/Qwen3-Embedding-8B
+    adapter_path: null
+    max_length: 8192
+    batch_size: 64
+    normalize: true
+    device: null
+    dtype: auto
+    trust_remote_code: false
+    show_progress: true
+    apply_adapter_to_query: true
+    apply_adapter_to_memory: false   # true ONLY for the symmetric baseline
+    query_instruction: Given a user query, retrieve target knowledge or reasoning that is useful for answering it.
+  fact_embedding_cache:
+    enabled: false                   # only valid when facts are encoded by the BASE model
+    root_dir: ./fact_embedding_cache
+    path: null
+    storage_dtype: float16

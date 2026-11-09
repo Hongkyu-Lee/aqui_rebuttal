@@ -1,0 +1,4 @@
+# Keep LF endings so the bash scripts run on the Linux servers even if checked out on Windows.
+* text=auto eol=lf
+*.json -diff
+*.jsonl -diff

@@ -1,0 +1,11 @@
+# run outputs / caches (outputs live in $OUT_BASE on the server)
+outputs/
+__pycache__/
+*.pyc
+*.log
+# local overrides and secrets -- never commit keys
+my_env.sh
+.env
+*.key
+# AWS staging tarball (data copied between servers, not code)
+aws_inputs_for_space.tar.gz

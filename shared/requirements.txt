@@ -1,0 +1,35 @@
+# Python 3.11 recommended (matches the existing cluster env; best vllm/torch/flash-attn wheel support).
+#
+# INSTALL ORDER MATTERS because vllm pins a specific torch+CUDA build:
+#   conda create -n actmem python=3.11 -y && conda activate actmem
+#   pip install "vllm>=0.8.5"            # installs a COMPATIBLE torch for your CUDA first
+#   pip install -r requirements.txt      # the rest (won't downgrade torch)
+# If a server won't serve models (eval/optimize only, hitting a remote vLLM), you can skip vllm
+# and just `pip install torch` for your CUDA + the rest.
+
+# ---- core: retrieval, training, eval ----
+torch                       # let vllm pick the version when serving; else install the CUDA-matched build
+transformers>=4.51.0        # Qwen3 support
+sentence-transformers>=2.7.0
+peft>=0.11                  # LoRA adapters
+accelerate>=0.30            # transformers Trainer backend
+datasets>=2.19
+numpy
+hydra-core>=1.3
+omegaconf>=2.3
+tqdm
+requests
+
+# ---- LLM re-ranker / optimizer clients (OpenAI-compatible vLLM endpoints) ----
+openai>=1.30
+
+# ---- GPU serving of the 4B re-ranker / 32B optimizer (OpenAI-compatible server) ----
+vllm>=0.8.5
+
+# ---- prompt optimization ----
+gepa                        # GEPA reflective+Pareto search (pulls in litellm)
+litellm                     # explicit; GEPA's reflection LM client for the 32B endpoint
+
+# ---- training logging (optional; only if you run embedding fine-tuning) ----
+wandb
+tensorboard

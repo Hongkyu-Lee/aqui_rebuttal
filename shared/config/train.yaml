@@ -1,0 +1,75 @@
+# Training config for the rebuttal package (paper setting = asymmetric query-only LoRA).
+# Derived from implicit_version_03/config/oppose_gen.yaml; server paths removed -- run.sh passes
+# train.data.path / train.model.output_dir / HPs as Hydra overrides.
+train:
+  data:
+    name: oppose_gen_grouped          # paper loader (v11con_2400, grouped rows)
+    path: null                        # set by run.sh -> ${V11CON_2400_JSONL}
+    file: null
+    split: null
+    query_field: query
+    positive_field: gold_session_fact
+    negative_field: general_fact
+    negative_pairing: cycle_negatives
+    strict_pair_count: false
+    group_field: group_id
+    group_source_field: memory_id
+    start_source_row: 0
+    source_row_ratio: null
+    source_row_sampling: random
+    source_row_sample_seed: 42
+    max_source_rows: null
+    max_expanded_samples: null
+    val_split_ratio: 0.1              # 10% of memories held out (grouped by memory_id)
+    val_split_seed: 42                # SAME split as the paper / HPO
+    val_split_by_group: true
+  model:
+    backend: qwen3
+    name: Qwen/Qwen3-Embedding-8B
+    output_dir: null                  # set by run.sh
+    max_length: 2048
+    query_instruction: Given a user query, retrieve target knowledge or reasoning that is useful for answering it.
+    device: null
+    trust_remote_code: false
+    lora:
+      enabled: true
+      r: 16
+      alpha: 32
+      dropout: 0.05
+      target_modules: all-linear
+      bias: none
+  optimization:
+    epochs: 12                        # ceiling; early stopping on synthetic val eval_loss decides
+    batch_size: 128
+    learning_rate: 5.0e-5
+    weight_decay: 0.01
+    warmup_ratio: 0.1
+    gradient_accumulation_steps: 1
+    max_grad_norm: 1.0
+    temperature: 0.02
+    positive_alignment_weight: 0.25   # auxiliary term used in the paper runs (undocumented in paper)
+    positive_anchor_weight: 0.0
+    negative_anchor_weight: 0.0
+    raw_query_negative_anchor_weight: 0.0
+    seed: 42
+    eval_batch_size: 64
+    num_workers: 0
+    log_every: 5
+    save_every_steps: null
+    resume_from_checkpoint: null
+    bf16: true
+    fp16: false
+    gradient_checkpointing: true
+    save_total_limit: 2
+    early_stopping_patience: 2
+    early_stopping_threshold: 0.0
+  logging:
+    tensorboard: false
+    dir: ./tensorboard
+    run_name: rebuttal
+    wandb:
+      enabled: false
+  evaluation:
+    enabled: false
+    batch_size: 8
+    max_examples: null
