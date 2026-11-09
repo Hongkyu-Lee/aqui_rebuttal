@@ -23,6 +23,11 @@ Specifically, keep identical:
   from our fact bag. In that case, also re-judge one paper AQUI answer file in the same run
   (`REJUDGE_FILES=...`), so the comparison uses one latent memory.
   The paper's answer files live under `/group-volume/users/h.lee4/prototypes/version_03_artifacts/gepa_answergen/`.
+  Which of those files are the paper's AQUI rows was not recorded. Find them with
+  `python -m tools.find_paper_answer_files --answers <gepa_answergen> --judged <judge_outputs> --out ${OUT_BASE}/E6/paper_aqui_answer_files`
+  (matches each file's old 122B-judge score to Table 2), then
+  `REJUDGE_FILES="$(tr '
+' ' ' < ${OUT_BASE}/E6/paper_aqui_answer_files.txt)" bash E6/run.sh`.
 * **Judge alias.** It is served as `gpt-4o-mini` because the judge code and the old tags expect
   that name. It is *not* OpenAI. `OPENAI_BASE_URL` points to the local server.
 * **Rigorous** = case 1 / N; **lenient** = (case1 + 0.5·case2 + 0.5·case3) / N. Empty answers are
