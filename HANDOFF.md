@@ -43,7 +43,7 @@ The full list with expected values is in `PATH_CHECKLIST.md`. Do not start E1 wh
 
 ```bash
 source my_env.sh
-for e in E1 E2 E2b E3 E4 E5 E6; do CHECK_ONLY=1 bash $e/run.sh; done   # prints [ok]/[MISSING]/[absent]; runs nothing
+for e in E1 E2 E2b E3 E4 E5 E6 E7; do CHECK_ONLY=1 bash $e/run.sh; done   # prints [ok]/[MISSING]/[absent]; runs nothing
 ```
 Fix every `[MISSING]` before starting. `[absent]` is fine (that part is skipped).
 
@@ -56,11 +56,12 @@ Logs: `${OUT_BASE}/<Exp>/logs/run.log` (+ one log per vLLM server / job).
 | 2 | `bash E2/run.sh` | 8 | Longest (trains 6 LoRAs). Symmetric arm may OOM at batch 128; see `E2/AGENT.md`. |
 | 3 | `bash E2b/run.sh`, `bash E3/run.sh` | 4, 8 | After E2. |
 | any | `bash E4/run.sh`, `bash E5/run.sh`, `bash E6/run.sh` | 8 each | Independent of E1-E3 (E4/E5 reuse E2 outputs if present). |
+| after E5 | `bash E7/run.sh` | 8 | Needs E5's evidence labels and AQUI ranking; uses E6's judge memory. Not at the same time as E6 (same ports). |
 
 Useful knobs: `GPUS="0 1 2 3"` (restrict GPUs), `STEPS="5 6"` (re-run only some steps; each
 `run.sh` header lists its steps). Finished outputs are skipped on re-run (`FORCE_TRAIN=1`, `FORCE_EVAL=1` to redo).
 
-**Shared machine:** the vLLM servers use ports 8000, 8001, 8002 (E6), 8100 (E4), 8200 (E5).
+**Shared machine:** the vLLM servers use ports 8000, 8001, 8002 (E6), 8000/8001 (E7), 8100 (E4), 8200 (E5).
 If a port is taken the script stops; set `JUDGE_PORT` / `LABEL_PORT` or edit the port in the
 experiment's `run.sh`. Do not run two experiments on the same GPUs at once.
 

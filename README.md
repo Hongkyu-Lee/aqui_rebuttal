@@ -23,7 +23,7 @@ iclr_2027_rebuttal/
     tools/                  experiment-specific python tools (all new)
     data/                   bundled small data: v11con_2400 training set, ActMemEval-hard construction
                             files + fact bags, rebuilt ActMemEval_implicit_hard (72 rows)
-  E1/ E2/ E2b/ E3/ E4/ E5/ E6/   one folder per experiment: run.sh, README.md, AGENT.md
+  E1/ ... E7/   one folder per experiment: run.sh, README.md, AGENT.md
 ```
 
 ## Experiments
@@ -37,8 +37,9 @@ iclr_2027_rebuttal/
 | E4 | ActMemEval-hard funnel, independent judge, paired 72 (human sheet opt-in) | 2KMq-W2b/Q3 | 8 (4 with API judge) | SPACE (+ copy original ActMemEval from AWS) | (E2 optional) |
 | E5 | Session vs fact vs evidence recall | 2KMq-Q4a | 8 | SPACE | (E1/E2 results reused) |
 | E6 | Oracle-memory answer baseline | 2KMq-Q4c | 8 | SPACE (AWS possible) | - |
+| E7 | Noisy-oracle answer baseline (evidence + AQUI-ranked distractors) | 2KMq-Q4c | 8 | SPACE | E5 (E6 recommended) |
 
-Recommended order: **E1 -> E2 -> (E2b, E3)**; E4, E5, E6 are independent and can run any time.
+Recommended order: **E1 -> E2 -> (E2b, E3)**; E4, E5, E6 are independent and can run any time; E7 after E5 (and E6).
 Not GPU experiments (answered in text): K=151 (2KMq-Q4b), related work, typos.
 
 ## Running
