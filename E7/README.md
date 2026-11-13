@@ -23,7 +23,9 @@ How to read it:
   facts, so generation is part of the bottleneck.
 * `noisy` vs `retrieved`: the only difference is that the evidence is guaranteed to be present.
 
-Default K: ImplexConv 10 and 50; ActMemEval-hard 10 and 30. Answer model: Qwen3-Next-80B only.
+Default K = the Table 2 columns of the Qwen3-Next-80B rows: ImplexConv 10, 20, 30, 50 (92, TaciTree's
+average output size, is left out to save time; add it with `KS_implexconv`); ActMemEval-hard 10, 14, 20,
+30, 40. K = number of facts in the answer model's prompt, as in Table 2. Answer model: Qwen3-Next-80B only.
 
 ## Reviewer points addressed
 | ID | Point |
@@ -40,8 +42,9 @@ Default K: ImplexConv 10 and 50; ActMemEval-hard 10 and 30. Answer model: Qwen3-
 ## Resources
 * **Server: SPACE** (same as E6).
 * **GPUs:** 8 x A100-80GB. Step 1: Qwen-80B on GPUs 0-3. Step 2: the 122B judge on all 8.
-* **Wall-clock (rough):** 5 answer files per dataset. ImplexConv ≈ 3.6k questions each; ~2-3 h
-  for answers and ~2-3 h for judging in total. ActMemEval-hard (72 questions) takes minutes.
+* **Wall-clock (rough):** 1 + 2 x (number of K) answer files per dataset. ImplexConv: 9 files of
+  ≈ 3.6k questions; ~4-6 h for answers and ~4-6 h for judging. ActMemEval-hard (72 questions,
+  11 files) takes minutes.
 * **Ports:** 8001 (answer model), 8000 (judge), the same as E6. Do not run E6 and E7 at the same time.
 
 ## Run
@@ -49,6 +52,6 @@ Default K: ImplexConv 10 and 50; ActMemEval-hard 10 and 30. Answer model: Qwen3-
 CHECK_ONLY=1 bash E7/run.sh                 # checks E5 outputs and paths; runs nothing
 bash E7/run.sh
 DS_LIST="implexconv" bash E7/run.sh         # ImplexConv only
-KS_implexconv="10 20 30 50" bash E7/run.sh  # more K
+KS_implexconv="10 20 30 50 92" bash E7/run.sh  # also K=92 (TaciTree's K)
 ```
 Outputs: `${OUT_BASE}/E7/answers/*.json`, `judged/*__judged.json`, `E7_summary.md`.

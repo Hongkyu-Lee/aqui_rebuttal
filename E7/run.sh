@@ -32,8 +32,8 @@ QWEN="qwen80b|Qwen/Qwen3-Next-80B-A3B-Instruct|8001|0,1,2,3|4|32768|--max-tokens
 JUDGE_HF="${JUDGE_HF:-Qwen/Qwen3.5-122B-A10B}"; JUDGE_ALIAS="${JUDGE_ALIAS:-gpt-4o-mini}"
 JUDGE_PORT="${JUDGE_PORT:-8000}"; JUDGE_GPUS="${JUDGE_GPUS:-0,1,2,3,4,5,6,7}"; JUDGE_TP="${JUDGE_TP:-8}"
 SEED="${SEED:-0}"
-KS_implexconv="${KS_implexconv:-10 50}"
-KS_actmem_hard="${KS_actmem_hard:-10 30}"
+KS_implexconv="${KS_implexconv:-10 20 30 50}"
+KS_actmem_hard="${KS_actmem_hard:-10 14 20 30 40}"
 DS_LIST="${DS_LIST:-implexconv actmem_hard}"
 
 # tag -> data spec | fact bag | judge dataset tag
